@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Ultimate Post Generator</title>
+<title>Ultimate Generator</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -57,58 +57,58 @@ button{
 <option>Velocity</option>
 </select>
 
-<input id="image" placeholder="Thumbnail Image URL">
+<input id="image" placeholder="Thumbnail Image URL (Required)">
 <input id="video" placeholder="Video URL">
 
-<textarea id="sections" placeholder="Sections:
-Intro
-###
-Tips
-###
-Benefits"></textarea>
+<textarea id="sections" placeholder="Intro ### Tips ### Benefits"></textarea>
 
 <input id="btnText" placeholder="Button Text">
 <input id="btnLink" placeholder="Button Link">
 
 <button onclick="generate()">Generate Post</button>
 
-<textarea id="output" placeholder="Output HTML"></textarea>
+<textarea id="output" placeholder="Generated HTML will appear here"></textarea>
 
 <script>
 function generate(){
 
-let title = document.getElementById("title").value;
-let category = document.getElementById("category").value;
-let image = document.getElementById("image").value;
-let video = document.getElementById("video").value;
-let sections = document.getElementById("sections").value.split("###");
-let btnText = document.getElementById("btnText").value;
-let btnLink = document.getElementById("btnLink").value;
+const title = document.getElementById("title").value.trim();
+const category = document.getElementById("category").value;
+const image = document.getElementById("image").value.trim();
+const video = document.getElementById("video").value.trim();
+const sections = document.getElementById("sections").value.split("###");
+const btnText = document.getElementById("btnText").value;
+const btnLink = document.getElementById("btnLink").value;
 
+/* IMAGE REQUIRED */
+if(!image){
+  alert("❌ Image URL required");
+  return;
+}
+
+/* CLEAN CONTENT */
 let content = "";
 
-/* USER SECTIONS */
 sections.forEach(sec=>{
   if(sec.trim()){
     content += `
 <div class="section">
 <h2>${sec.trim()}</h2>
-<p>Write content here...</p>
 </div>`;
   }
 });
 
-/* AUTO HOW TO USE */
+/* HOW TO USE */
 content += `
 <div class="section">
 <h2>How to Use</h2>
 <p>1. Click the button below</p>
 <p>2. Open in CapCut</p>
-<p>3. Export your video</p>
+<p>3. Export video</p>
 </div>`;
 
-let html = `
-<!DOCTYPE html>
+/* FINAL HTML */
+const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -127,17 +127,14 @@ body{
   color:#fff;
 }
 
-/* HIDDEN */
 .featured-img,.category{display:none}
 
-/* CONTAINER */
 .container{
   padding:15px;
   max-width:900px;
   margin:auto;
 }
 
-/* TITLE */
 h1{
   font-size:20px;
   margin-bottom:10px;
@@ -149,7 +146,6 @@ h1{
   margin:20px auto;
   border-radius:18px;
   overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
 video{
@@ -158,7 +154,7 @@ video{
   object-fit:cover;
 }
 
-/* BTN */
+/* BUTTON */
 .btn{
   display:block;
   margin:20px 0;
@@ -168,7 +164,21 @@ video{
   border-radius:12px;
   color:#fff;
   text-decoration:none;
-  font-weight:500;
+}
+
+/* SHARE */
+.share{
+  display:flex;
+  gap:10px;
+}
+
+.share button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#11161d;
+  color:#fff;
 }
 
 /* SECTION */
@@ -178,12 +188,6 @@ video{
 
 .section h2{
   font-size:16px;
-  margin-bottom:6px;
-}
-
-.section p{
-  font-size:14px;
-  color:#aaa;
 }
 
 /* RELATED */
@@ -191,11 +195,6 @@ video{
   margin-top:30px;
 }
 
-.related h2{
-  margin-bottom:10px;
-}
-
-/* RELATED CARD */
 .rel-card{
   display:flex;
   gap:10px;
@@ -230,6 +229,7 @@ video{
   .video-wrap{max-width:100%}
 }
 </style>
+
 </head>
 
 <body>
@@ -249,9 +249,12 @@ video{
 
 ${content}
 
-<a class="btn" href="${btnLink}" target="_blank">
-${btnText}
-</a>
+<a class="btn" href="${btnLink}" target="_blank">${btnText}</a>
+
+<div class="share">
+<button onclick="sharePost()">Share</button>
+<button onclick="copyLink()">Copy Link</button>
+</div>
 
 <div class="related">
 <h2>🔥 Related Templates</h2>
@@ -263,15 +266,31 @@ ${btnText}
 <script>
 const username = "kuldeeptech-ai";
 const repo = "kld_editz";
-
 const currentCategory = "${category}";
 
+/* SHARE FIX */
+function sharePost(){
+  if(navigator.share){
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    });
+  }else{
+    copyLink();
+    alert("Link copied (sharing not supported)");
+  }
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href);
+}
+
+/* RELATED POSTS (MIN 4) */
 async function loadRelated(){
   const res = await fetch(\`https://api.github.com/repos/\${username}/\${repo}/contents/posts\`);
   const data = await res.json();
 
   const container = document.getElementById("relatedList");
-
   let count = 0;
 
   for(const file of data){
@@ -289,8 +308,9 @@ async function loadRelated(){
       if(postCat !== currentCategory) continue;
 
       let imgMatch = text.match(/class="featured-img".*src="(.*?)"/);
-      let image = imgMatch ? imgMatch[1] : "https://picsum.photos/300/200";
+      if(!imgMatch) continue;
 
+      let image = imgMatch[1];
       let title = file.name.replace(".html","").replace(/-/g," ");
 
       const div = document.createElement("div");
@@ -317,13 +337,14 @@ async function loadRelated(){
 }
 
 loadRelated();
-</script>
+<\/script>
 
 </body>
-</html>
-`;
+</html>`;
 
+/* OUTPUT */
 document.getElementById("output").value = html;
+
 }
 </script>
 
