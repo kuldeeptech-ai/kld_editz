@@ -4,12 +4,116 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RAJAN ROX</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+/* ===== GLOBAL ===== */
+body{
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background:#0f172a;
+  color:white;
+}
+
+/* ===== HEADER ===== */
+header{
+  background:#020617;
+  padding:15px;
+  text-align:center;
+  border-bottom:2px solid red;
+}
+
+header h1{
+  margin:0;
+  font-size:35px;
+}
+
+header span{
+  color:white;
+}
+header b{
+  color:red;
+}
+
+/* ===== SEARCH BAR ===== */
+.topbar{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  padding:15px;
+}
+
+.topbar input{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  width:200px;
+}
+
+.topbar select{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+
+/* ===== GRID ===== */
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+  padding:20px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:#1e293b;
+  border-radius:12px;
+  overflow:hidden;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.03);
+}
+
+.card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:15px;
+}
+
+.card h2{
+  font-size:18px;
+}
+
+.card p{
+  color:#ccc;
+}
+
+.card a{
+  display:inline-block;
+  margin-top:10px;
+  background:red;
+  padding:8px 12px;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  header h1{font-size:25px;}
+}
+</style>
+
 </head>
 <body>
 
 <header>
-  <h1><span>RAJAN</span> ROX</h1>
+  <h1><span>RAJAN</span> <b>ROX</b></h1>
 </header>
 
 <div class="topbar">
@@ -17,12 +121,54 @@
   <select id="category">
     <option value="all">All</option>
     <option value="capcut">CapCut</option>
-    <option value="ai">AI Editing</option>
+    <option value="ai">AI</option>
   </select>
 </div>
 
 <div class="container" id="posts"></div>
 
-<script src="script.js"></script>
+<script>
+// ===== LOAD POSTS =====
+let allPosts=[];
+
+fetch("posts.json")
+.then(res=>res.json())
+.then(data=>{
+  allPosts=data.reverse();
+  showPosts(allPosts);
+});
+
+function showPosts(posts){
+  let box=document.getElementById("posts");
+  box.innerHTML="";
+
+  posts.forEach(p=>{
+    box.innerHTML+=`
+      <div class="card">
+        <img src="${p.image}">
+        <div class="card-content">
+          <h2>${p.title}</h2>
+          <p>${p.date}</p>
+          <a href="${p.file}">Read More</a>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// ===== SEARCH =====
+document.getElementById("search").addEventListener("input",e=>{
+  let val=e.target.value.toLowerCase();
+  showPosts(allPosts.filter(p=>p.title.toLowerCase().includes(val)));
+});
+
+// ===== CATEGORY =====
+document.getElementById("category").addEventListener("change",e=>{
+  let val=e.target.value;
+  if(val==="all") showPosts(allPosts);
+  else showPosts(allPosts.filter(p=>p.category===val));
+});
+</script>
+
 </body>
 </html>
