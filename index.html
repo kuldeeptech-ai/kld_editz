@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAJAN ROX</title>
+<title>Kuldeep ROX</title>
 
 <style>
 body{
@@ -10,9 +10,9 @@ body{
   font-family:system-ui;
   background:#0f172a;
   color:white;
+  user-select:none; /* ❌ text select disable */
 }
 
-/* HEADER */
 header{
   text-align:center;
   padding:12px;
@@ -20,12 +20,6 @@ header{
   border-bottom:2px solid red;
 }
 
-header h1{
-  margin:0;
-  font-size:26px;
-}
-
-/* LIST */
 .container{
   max-width:700px;
   margin:auto;
@@ -36,84 +30,48 @@ header h1{
   padding:12px;
   border-bottom:1px solid #1e293b;
   cursor:pointer;
-  transition:0.2s;
 }
 
 .post:hover{
   background:#1e293b;
 }
-
-.post h2{
-  font-size:16px;
-  margin:0;
-}
-
-.post p{
-  font-size:12px;
-  color:#aaa;
-  margin:3px 0 0;
-}
-
-/* SEARCH */
-.search{
-  padding:10px;
-  text-align:center;
-}
-
-.search input{
-  width:90%;
-  padding:8px;
-  border:none;
-  border-radius:6px;
-}
 </style>
+
 </head>
 
 <body>
 
 <header>
-  <h1>🔥 RAJAN ROX</h1>
+  <h2>🔥 RAJAN ROX</h2>
 </header>
 
-<div class="search">
-  <input type="text" id="search" placeholder="🔍 Search...">
-</div>
-
-<div class="container" id="posts"></div>
+<div class="container" id="posts">Loading...</div>
 
 <script>
-let allPosts=[];
+// 🔥 CHANGE THIS (YOUR USERNAME + REPO)
+let user="kuldeeptech-ai";
+let repo="kld_editz";
 
-fetch("posts.json")
-.then(r=>r.json())
+fetch(`https://api.github.com/repos/${user}/${repo}/contents/posts`)
+.then(res=>res.json())
 .then(data=>{
-  allPosts=data.reverse();
-  show(allPosts);
-});
-
-function show(posts){
   let box=document.getElementById("posts");
   box.innerHTML="";
 
-  posts.forEach(p=>{
-    box.innerHTML+=`
-      <div class="post" onclick="openPost('${p.file}')">
-        <h2>${p.title}</h2>
-        <p>${p.date}</p>
-      </div>
-    `;
+  data.reverse().forEach(file=>{
+    if(file.name.endsWith(".html")){
+      box.innerHTML+=`
+        <div class="post" onclick="openPost('${file.path}')">
+          ${file.name.replace(".html","")}
+        </div>
+      `;
+    }
   });
-}
+});
 
-function openPost(file){
-  window.location=file + "?v=" + new Date().getTime();
+function openPost(path){
+  window.location=path + "?v=" + Date.now();
 }
-
-// SEARCH
-document.getElementById("search").oninput=e=>{
-  let v=e.target.value.toLowerCase();
-  show(allPosts.filter(p=>p.title.toLowerCase().includes(v)));
-};
 </script>
 
 </body>
