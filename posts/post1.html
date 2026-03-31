@@ -2,12 +2,13 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 body{
   margin:0;
-  font-family:system-ui;
+  font-family:'Inter', sans-serif;
   background:#0f172a;
   color:white;
 }
@@ -18,33 +19,64 @@ header{
   padding:12px;
   background:#020617;
   border-bottom:2px solid red;
+  font-weight:700;
 }
 
 /* CONTENT */
 .container{
-  max-width:700px;
+  max-width:800px;
   margin:auto;
   padding:15px;
-  line-height:1.6;
+  line-height:1.7;
 }
 
-h2{margin-top:0;}
-
-p{color:#ddd;}
-
-/* VIDEO */
-.video{
+/* IMAGE */
+.banner{
   width:100%;
-  aspect-ratio:16/9;
   border-radius:10px;
-  overflow:hidden;
-  margin:15px 0;
 }
 
-iframe, video{
+/* REEL */
+.reel{
+  width:100%;
+  max-width:360px;
+  aspect-ratio:9/16;
+  margin:20px auto;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+iframe{
   width:100%;
   height:100%;
   border:none;
+}
+
+/* TEXT */
+h2{
+  font-size:22px;
+}
+
+h3{
+  color:#f87171;
+  margin-top:20px;
+}
+
+p{
+  color:#ddd;
+}
+
+/* BUTTON */
+.btn{
+  display:block;
+  background:red;
+  color:white;
+  padding:12px;
+  text-align:center;
+  margin-top:20px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
 }
 </style>
 
@@ -52,38 +84,35 @@ iframe, video{
 
 <body>
 
-<header>
-  <h2>🔥 RAJAN ROX</h2>
-</header>
+<header>🔥 RAJAN ROX</header>
 
 <div class="container">
 
-<h2>PAN Card New Rule 2026</h2>
-<p>March 31, 2026</p>
+<h2>Hum Pyaar Karne Wale Template</h2>
+<p>March 30, 2026</p>
 
-<!-- 🎥 OPTION 1: YOUTUBE VIDEO -->
-<div class="video">
-  <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+<img class="banner" src="https://picsum.photos/800/400">
+
+<div class="reel">
+  <iframe src="YOUR_VIDEO_LINK"></iframe>
 </div>
 
-<!-- 🎥 OPTION 2: DIRECT VIDEO LINK -->
-<!--
-<div class="video">
-  <video controls>
-    <source src="https://your-video-link.mp4" type="video/mp4">
-  </video>
-</div>
--->
-
+<h3>How To Select Your Video Clips?</h3>
 <p>
-1 अप्रैल से PAN Card के नियम बदल रहे हैं।
-अब सिर्फ आधार कार्ड से काम नहीं चलेगा।
+Friends, agar aap video edit karna chahte hain to sabse pehle correct clips select karna zaruri hai...
 </p>
 
+<h3>How To Use Hum Pyaar Karne Wale Template</h3>
 <p>
-जन्म प्रमाण पत्र, ड्राइविंग लाइसेंस जैसे documents भी लग सकते हैं।
-इसलिए पहले ही apply कर लें।
+Template open karein, apni clips add karein aur export karein...
 </p>
+
+<h3>Conclusion</h3>
+<p>
+Yeh ek easy aur fast method hai viral video banane ka...
+</p>
+
+<a class="btn" href="#" target="_blank">Use Template</a>
 
 </div>
 
