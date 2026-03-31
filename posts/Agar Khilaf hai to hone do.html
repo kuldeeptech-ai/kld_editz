@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agar Khilaf hai to hone do</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Poppins;
+  background:#0b0f14;
+  color:#fff;
+}
+
+.featured-img,.category{display:none}
+
+.container{
+  padding:15px;
+  max-width:900px;
+  margin:auto;
+}
+
+h1{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+/* VIDEO */
+.video-wrap{
+  max-width:400px;
+  margin:20px auto;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+video{
+  width:100%;
+  aspect-ratio:9/16;
+  object-fit:cover;
+}
+
+/* BUTTON */
+.btn{
+  display:block;
+  margin:20px 0;
+  padding:14px;
+  text-align:center;
+  background:#ff0050;
+  border-radius:12px;
+  color:#fff;
+  text-decoration:none;
+}
+
+/* SHARE */
+.share{
+  display:flex;
+  gap:10px;
+}
+
+.share button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#11161d;
+  color:#fff;
+}
+
+/* SECTION */
+.section{
+  margin-top:18px;
+}
+
+.section h2{
+  font-size:16px;
+}
+
+/* RELATED */
+.related{
+  margin-top:30px;
+}
+
+.rel-card{
+  display:flex;
+  gap:10px;
+  background:#11161d;
+  border-radius:12px;
+  margin-bottom:10px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.rel-thumb{
+  width:120px;
+  height:70px;
+}
+
+.rel-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.rel-title{
+  font-size:13px;
+  padding:8px;
+  display:flex;
+  align-items:center;
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  h1{font-size:18px}
+  .video-wrap{max-width:100%}
+}
+</style>
+
+</head>
+
+<body>
+
+<img class="featured-img" src="6">
+<div class="category">Trending</div>
+
+<div class="container">
+
+<h1>Agar Khilaf hai to hone do</h1>
+
+<div class="video-wrap">
+<video controls autoplay loop>
+<source src="https://v16-capcut.capcutcdn-us.com/d07982d34b2915109666c25d4a5de806/69d01751/video/tos/useast5/tos-useast5-ve-2795c799-tx/o41PBRfDQQ1Dt9ouofwcjcRnkBHCNEvXFgDGIg/?a=3006&bti=cHJ3bzFmc3dmZEBvY15taF4rcm1gYA%3D%3D&&bt=618&ft=GAAsxInz7ThCvHOPXq8Zmo&mime_type=video_mp4&rc=ZDg8Z2c3ZjdlNWZnNjw0Z0BpMzs2NHQ5cms6NDMzOGVkNEBhXjMuYi4wNTIxMmM0NDEvYSNrcXFuMmRra21hLS1kYi1zcw%3D%3D&vvpl=1&l=undefined&btag=e000b8000">
+</video>
+</div>
+
+
+<div class="section">
+<h2>How to Use</h2>
+<p>1. Click the button below</p>
+<p>2. Open in CapCut</p>
+<p>3. Export video</p>
+</div>
+
+<a class="btn" href="https://capcut-yt.onelink.me/W3Oy?af_dp=capcut%3A%2F%2Ftemplate%2Fdetail%3Fenter_app%3Dother%26enter_from%3Dshared_other_template_detail_template_btn%26template_id%3D7526213064182533429%26template_language%3DNone&af_xp=social&deep_link_sub1=%7B%22share_token%22%3A%22afe17285-8c81-44a0-9cfd-a7f8138e5fd6%22%7D&deep_link_value=capcut%253A%252F%252Ftemplate%252Fdetail%253Fenter_app%253Dother%2526enter_from%253Dshared_other_template_detail_template_btn%2526template_id%253D7526213064182533429%2526template_language%253DNone&is_retargeting=true&pid=SharedPage_other_tp_de_new" target="_blank">Use Template On CapCut</a>
+
+<div class="share">
+<button onclick="sharePost()">Share</button>
+<button onclick="copyLink()">Copy Link</button>
+</div>
+
+<div class="related">
+<h2>🔥 Related Templates</h2>
+<div id="relatedList"></div>
+</div>
+
+</div>
+
+<script>
+const username = "kuldeeptech-ai";
+const repo = "kld_editz";
+const currentCategory = "Trending";
+
+/* SHARE FIX */
+function sharePost(){
+  if(navigator.share){
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    });
+  }else{
+    copyLink();
+    alert("Link copied (sharing not supported)");
+  }
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href);
+}
+
+/* RELATED POSTS (MIN 4) */
+async function loadRelated(){
+  const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/posts`);
+  const data = await res.json();
+
+  const container = document.getElementById("relatedList");
+  let count = 0;
+
+  for(const file of data){
+
+    if(!file.name.endsWith(".html")) continue;
+    if(window.location.pathname.includes(file.name)) continue;
+
+    try{
+      const raw = await fetch(file.download_url);
+      const text = await raw.text();
+
+      let catMatch = text.match(/<div class="category">(.*?)<\/div>/);
+      let postCat = catMatch ? catMatch[1] : "";
+
+      if(postCat !== currentCategory) continue;
+
+      let imgMatch = text.match(/class="featured-img".*src="(.*?)"/);
+      if(!imgMatch) continue;
+
+      let image = imgMatch[1];
+      let title = file.name.replace(".html","").replace(/-/g," ");
+
+      const div = document.createElement("div");
+      div.className="rel-card";
+
+      div.innerHTML=`
+        <div class="rel-thumb">
+          <img src="${image}">
+        </div>
+        <div class="rel-title">${title}</div>
+      `;
+
+      div.onclick=()=>{
+        window.location.href = file.path + "?v=" + Date.now();
+      }
+
+      container.appendChild(div);
+
+      count++;
+      if(count >= 4) break;
+
+    }catch{}
+  }
+}
+
+loadRelated();
+</script>
+
+</body>
+</html>
