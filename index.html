@@ -1,115 +1,246 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Templates</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:'Inter', sans-serif;
-  background:#0f172a;
-  color:white;
+  font-family:'Poppins',sans-serif;
+  background:#0b0f14;
+  color:#fff;
 }
 
 /* HEADER */
 header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   padding:15px;
-  text-align:center;
-  background:#020617;
-  font-weight:700;
-  border-bottom:2px solid red;
 }
 
-/* SEARCH */
-.search{
-  padding:10px;
-  text-align:center;
+.logo{
+  font-size:18px;
+  font-weight:600;
 }
 
-.search input{
-  width:90%;
+/* SEARCH ICON */
+.search-btn{
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* SEARCH BOX */
+.search-box{
+  display:none;
   padding:10px;
-  border-radius:8px;
+}
+
+.search-box input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
   border:none;
+  background:#11161d;
+  color:#fff;
 }
 
-/* GRID */
-.container{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:15px;
-  padding:15px;
+/* CATEGORY BAR */
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:10px;
+}
+
+.cat{
+  padding:6px 12px;
+  background:#11161d;
+  border-radius:20px;
+  font-size:12px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+/* LIST */
+.list{
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
 /* CARD */
 .card{
-  background:#1e293b;
+  display:flex;
+  gap:12px;
+  background:#11161d;
   border-radius:12px;
   overflow:hidden;
   cursor:pointer;
 }
 
-.card img{
+.thumb{
+  width:140px;
+  height:80px;
+}
+
+.thumb img{
   width:100%;
-  height:180px;
+  height:100%;
   object-fit:cover;
 }
 
-.card h2{
-  padding:10px;
-  font-size:16px;
+.content{
+  display:flex;
+  align-items:center;
+}
+
+.title{
+  font-size:14px;
+}
+
+/* LOAD MORE */
+.load-more{
+  text-align:center;
+  padding:15px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#ff0050;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* SKELETON */
+.skeleton{
+  height:80px;
+  background:linear-gradient(90deg,#111,#222,#111);
+  border-radius:10px;
+  animation:load 1.5s infinite;
+}
+
+@keyframes load{
+  0%{background-position:-200px}
+  100%{background-position:200px}
 }
 </style>
-
 </head>
 
 <body>
 
-<header>🔥 RAJAN ROX</header>
+<header>
+<div class="logo">Kld Editz</div>
+<div class="search-btn" onclick="toggleSearch()">🔍</div>
+</header>
 
-<div class="search">
-<input type="text" id="search" placeholder="🔍 Search...">
+<div class="search-box" id="searchBox">
+<input type="text" id="search" placeholder="Search templates...">
 </div>
 
-<div class="container" id="posts"></div>
+<!-- CATEGORY -->
+<div class="categories">
+<div class="cat">All</div>
+<div class="cat">Trending</div>
+<div class="cat">Love</div>
+<div class="cat">Sad</div>
+<div class="cat">Beat</div>
+</div>
+
+<!-- POSTS -->
+<div class="list" id="posts"></div>
+
+<!-- LOAD MORE -->
+<div class="load-more">
+<button onclick="loadMore()">Load More</button>
+</div>
 
 <script>
-let user="kuldeeptech-ai";
-let repo="kld_editz";
-let allPosts=[];
+const username = "kuldeeptech-ai";
+const repo = "kld_editz";
 
-fetch(`https://api.github.com/repos/${user}/${repo}/contents/posts`)
-.then(res=>res.json())
-.then(data=>{
-  allPosts=data.filter(f=>f.name.endsWith(".html"));
-  show(allPosts.reverse());
-});
+let allPosts = [];
+let visible = 5;
 
-function show(posts){
-  let box=document.getElementById("posts");
-  box.innerHTML="";
+/* FETCH */
+async function fetchPosts(){
+  const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/posts`);
+  const data = await res.json();
 
-  posts.forEach(p=>{
-    box.innerHTML+=`
-      <div class="card" onclick="openPost('${p.path}')">
-        <img src="https://picsum.photos/400/300?random=${Math.random()}">
-        <h2>${p.name.replace(".html","")}</h2>
+  allPosts = data.filter(f=>f.name.endsWith(".html"));
+  renderPosts();
+}
+
+/* RENDER */
+async function renderPosts(){
+  const container = document.getElementById("posts");
+  container.innerHTML = "";
+
+  let slice = allPosts.slice(0, visible);
+
+  for(const file of slice){
+    let title = file.name.replace(".html","").replace(/-/g," ");
+    let image = "https://picsum.photos/768/432";
+
+    try{
+      const raw = await fetch(file.download_url);
+      const text = await raw.text();
+      const match = text.match(/class="featured-img".*src="(.*?)"/);
+      if(match) image = match[1];
+    }catch{}
+
+    const card = document.createElement("div");
+    card.className="card";
+
+    card.innerHTML=`
+      <div class="thumb">
+        <img loading="lazy" src="${image}">
+      </div>
+      <div class="content">
+        <div class="title">${title}</div>
       </div>
     `;
-  });
+
+    card.onclick=()=>{
+      window.location.href = file.path + "?v=" + Date.now();
+    }
+
+    container.appendChild(card);
+  }
 }
 
-function openPost(path){
-  window.location=path + "?v=" + Date.now();
+/* LOAD MORE */
+function loadMore(){
+  visible += 5;
+  renderPosts();
 }
 
-// SEARCH
-document.getElementById("search").oninput=e=>{
-  let v=e.target.value.toLowerCase();
-  show(allPosts.filter(p=>p.name.toLowerCase().includes(v)));
-};
+/* SEARCH */
+document.addEventListener("input", e=>{
+  if(e.target.id==="search"){
+    let val = e.target.value.toLowerCase();
+    document.querySelectorAll(".card").forEach(card=>{
+      card.style.display = card.innerText.toLowerCase().includes(val) ? "flex":"none";
+    });
+  }
+});
+
+/* TOGGLE SEARCH */
+function toggleSearch(){
+  let box = document.getElementById("searchBox");
+  box.style.display = box.style.display==="block" ? "none":"block";
+}
+
+fetchPosts();
 </script>
 
 </body>
