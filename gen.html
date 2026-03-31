@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post Generator</title>
+<title>Generator</title>
 
 <style>
 body{
@@ -15,7 +15,7 @@ body{
 input, textarea{
   width:100%;
   padding:10px;
-  margin:10px 0;
+  margin:8px 0;
   border:none;
   border-radius:6px;
 }
@@ -23,7 +23,7 @@ input, textarea{
 button{
   background:red;
   color:white;
-  padding:10px;
+  padding:12px;
   border:none;
   width:100%;
   margin-top:10px;
@@ -46,42 +46,32 @@ button{
 <input id="date" placeholder="Date">
 <input id="video" placeholder="YouTube Embed Link">
 
-<!-- Sections -->
-<input id="sec1title" placeholder="Section 1 Title">
-<textarea id="sec1" placeholder="Section 1 Content"></textarea>
+<input id="s1t" placeholder="Section 1 Title">
+<textarea id="s1"></textarea>
 
-<input id="sec2title" placeholder="Section 2 Title">
-<textarea id="sec2" placeholder="Section 2 Content"></textarea>
+<input id="s2t" placeholder="Section 2 Title">
+<textarea id="s2"></textarea>
 
-<input id="sec3title" placeholder="Section 3 Title (Conclusion)">
-<textarea id="sec3" placeholder="Conclusion Content"></textarea>
+<input id="s3t" placeholder="Conclusion Title">
+<textarea id="s3"></textarea>
 
-<button onclick="generate()">Generate HTML</button>
+<!-- BUTTON OPTION -->
+<input id="btnText" placeholder="Button Text (Download / Apply)">
+<input id="btnLink" placeholder="Button Link">
+
+<button onclick="gen()">Generate</button>
 
 <div class="output" id="out"></div>
 
 <script>
-function generate(){
-
-let title=document.getElementById("title").value;
-let date=document.getElementById("date").value;
-let video=document.getElementById("video").value;
-
-let s1t=document.getElementById("sec1title").value;
-let s1=document.getElementById("sec1").value;
-
-let s2t=document.getElementById("sec2title").value;
-let s2=document.getElementById("sec2").value;
-
-let s3t=document.getElementById("sec3title").value;
-let s3=document.getElementById("sec3").value;
+function gen(){
 
 let html=`
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${title}</title>
+<title>${title.value}</title>
 
 <style>
 body{margin:0;font-family:sans-serif;background:#0f172a;color:white;}
@@ -90,6 +80,7 @@ header{text-align:center;padding:12px;background:#020617;border-bottom:2px solid
 .video{width:100%;aspect-ratio:16/9;margin:15px 0;}
 iframe{width:100%;height:100%;border:none;}
 h3{color:#f87171;}
+.btn{display:block;background:red;color:white;padding:12px;text-align:center;margin-top:20px;text-decoration:none;}
 </style>
 
 </head>
@@ -100,21 +91,23 @@ h3{color:#f87171;}
 
 <div class="container">
 
-<h2>${title}</h2>
-<p>${date}</p>
+<h2>${title.value}</h2>
+<p>${date.value}</p>
 
 <div class="video">
-<iframe src="${video}" allowfullscreen></iframe>
+<iframe src="${video.value}" allowfullscreen></iframe>
 </div>
 
-<h3>${s1t}</h3>
-<p>${s1}</p>
+<h3>${s1t.value}</h3>
+<p>${s1.value}</p>
 
-<h3>${s2t}</h3>
-<p>${s2}</p>
+<h3>${s2t.value}</h3>
+<p>${s2.value}</p>
 
-<h3>${s3t}</h3>
-<p>${s3}</p>
+<h3>${s3t.value}</h3>
+<p>${s3.value}</p>
+
+<a class="btn" href="${btnLink.value}" target="_blank">${btnText.value}</a>
 
 </div>
 
