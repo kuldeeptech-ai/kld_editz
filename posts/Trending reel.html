@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Template</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Poppins;
+  background:#0b0f14;
+  color:#fff;
+}
+
+/* HIDDEN */
+.featured-img,.category{
+  display:none;
+}
+
+/* TOP */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 15px;
+}
+
+.container{
+  padding:15px;
+}
+
+/* BADGE */
+.badge{
+  display:inline-block;
+  padding:5px 10px;
+  background:#11161d;
+  border-radius:20px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+/* VIDEO */
+.video-wrap{
+  max-width:380px;
+  margin:15px auto;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+video{
+  width:100%;
+  aspect-ratio:9/16;
+}
+
+/* BTN */
+.btn{
+  display:block;
+  margin:15px 0;
+  padding:14px;
+  text-align:center;
+  background:#ff0050;
+  border-radius:10px;
+  color:#fff;
+  text-decoration:none;
+}
+
+/* SHARE */
+.share{
+  display:flex;
+  gap:10px;
+}
+
+.share button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#11161d;
+  color:#fff;
+}
+
+/* RELATED */
+.related{
+  margin-top:25px;
+}
+
+.related h2{
+  font-size:16px;
+  margin-bottom:10px;
+}
+
+/* RELATED CARD */
+.rel-card{
+  display:flex;
+  gap:10px;
+  background:#11161d;
+  border-radius:10px;
+  margin-bottom:10px;
+  cursor:pointer;
+  overflow:hidden;
+}
+
+.rel-thumb{
+  width:120px;
+  height:70px;
+}
+
+.rel-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.rel-title{
+  font-size:13px;
+  padding:8px;
+  display:flex;
+  align-items:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HIDDEN DATA -->
+<img class="featured-img" src="https://picsum.photos/800/400">
+<div class="category">Trending</div>
+
+<div class="topbar">
+<div onclick="history.back()">⬅</div>
+<div onclick="share()">📤</div>
+</div>
+
+<div class="container">
+
+<div class="badge" id="cat"></div>
+
+<h1>🔥 Trending Template</h1>
+
+<div class="video-wrap">
+<video controls autoplay loop>
+<source src="YOUR_VIDEO_LINK.mp4">
+</video>
+</div>
+
+<a class="btn" href="https://capcut.com" target="_blank">
+Use Template on CapCut
+</a>
+
+<div class="share">
+<button onclick="share()">Share</button>
+<button onclick="copy()">Copy Link</button>
+</div>
+
+<!-- 🔥 RELATED POSTS -->
+<div class="related">
+<h2>🔥 Related Templates</h2>
+<div id="relatedList"></div>
+</div>
+
+</div>
+
+<script>
+const username = "kuldeeptech-ai";
+const repo = "kld_editz";
+
+/* CATEGORY */
+const currentCategory = document.querySelector(".category").innerText;
+document.getElementById("cat").innerText = currentCategory;
+
+/* SHARE */
+function share(){
+  navigator.share({
+    title:document.title,
+    url:window.location.href
+  });
+}
+
+function copy(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("Copied!");
+}
+
+/* RELATED POSTS */
+async function loadRelated(){
+  const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/posts`);
+  const data = await res.json();
+
+  const container = document.getElementById("relatedList");
+
+  for(const file of data){
+
+    if(!file.name.endsWith(".html")) continue;
+
+    // skip current page
+    if(window.location.pathname.includes(file.name)) continue;
+
+    try{
+      const raw = await fetch(file.download_url);
+      const text = await raw.text();
+
+      // extract category
+      let catMatch = text.match(/<div class="category">(.*?)<\/div>/);
+      let postCat = catMatch ? catMatch[1] : "";
+
+      if(postCat !== currentCategory) continue;
+
+      // extract image
+      let imgMatch = text.match(/class="featured-img".*src="(.*?)"/);
+      let image = imgMatch ? imgMatch[1] : "https://picsum.photos/300/200";
+
+      let title = file.name.replace(".html","").replace(/-/g," ");
+
+      const div = document.createElement("div");
+      div.className="rel-card";
+
+      div.innerHTML=`
+        <div class="rel-thumb">
+          <img src="${image}">
+        </div>
+        <div class="rel-title">${title}</div>
+      `;
+
+      div.onclick=()=>{
+        window.location.href = file.path + "?v=" + Date.now();
+      }
+
+      container.appendChild(div);
+
+    }catch{}
+  }
+}
+
+loadRelated();
+</script>
+
+</body>
+</html>
