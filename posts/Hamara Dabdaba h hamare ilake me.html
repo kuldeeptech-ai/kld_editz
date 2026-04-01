@@ -19,31 +19,18 @@ body{
 
 .featured-img,.category{display:none}
 
-/* TOP BAR */
 .topbar{
   display:flex;
   justify-content:space-between;
   padding:12px 15px;
 }
 
-.back{
-  cursor:pointer;
-  font-size:16px;
-}
-
-/* CONTAINER */
 .container{
   padding:15px;
   max-width:900px;
   margin:auto;
 }
 
-h1{
-  font-size:20px;
-  margin-bottom:10px;
-}
-
-/* VIDEO */
 .video-wrap{
   max-width:400px;
   margin:20px auto;
@@ -54,10 +41,8 @@ h1{
 video{
   width:100%;
   aspect-ratio:9/16;
-  object-fit:cover;
 }
 
-/* BUTTON */
 .btn{
   display:block;
   margin:20px 0;
@@ -69,19 +54,6 @@ video{
   text-decoration:none;
 }
 
-/* BACK BUTTON */
-.back-btn{
-  display:block;
-  margin-top:20px;
-  padding:12px;
-  text-align:center;
-  background:#11161d;
-  color:#fff;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-/* SHARE */
 .share{
   display:flex;
   gap:10px;
@@ -90,25 +62,15 @@ video{
 .share button{
   flex:1;
   padding:12px;
-  border:none;
-  border-radius:8px;
   background:#11161d;
   color:#fff;
+  border:none;
+  border-radius:8px;
 }
 
-/* SECTION */
-.section{
-  margin-top:18px;
-}
+.section{margin-top:15px}
 
-.section h2{
-  font-size:16px;
-}
-
-/* RELATED */
-.related{
-  margin-top:30px;
-}
+.related{margin-top:30px}
 
 .rel-card{
   display:flex;
@@ -116,14 +78,11 @@ video{
   background:#11161d;
   border-radius:12px;
   margin-bottom:10px;
-  overflow:hidden;
   cursor:pointer;
+  overflow:hidden;
 }
 
-.rel-thumb{
-  width:120px;
-  height:70px;
-}
+.rel-thumb{width:120px;height:70px}
 
 .rel-thumb img{
   width:100%;
@@ -137,26 +96,18 @@ video{
   display:flex;
   align-items:center;
 }
-
-/* RESPONSIVE */
-@media(max-width:600px){
-  h1{font-size:18px}
-  .video-wrap{max-width:100%}
-}
 </style>
 </head>
 
 <body>
 
-<!-- TOP BACK -->
 <div class="topbar">
-<div class="back" onclick="goBack()">⬅ Back</div>
+<div onclick="goBack()">⬅ Back</div>
 <div onclick="sharePost()">📤</div>
 </div>
 
-<!-- HIDDEN SYSTEM -->
-<img class="featured-img" src="https://hdnfjd.com">
-<div class="category">Trending/attitude</div>
+<img class="featured-img" src="https://api.github.com/repos/">
+<div class="category">Trending</div>
 
 <div class="container">
 
@@ -169,20 +120,18 @@ video{
 </div>
 
 <div class="section">
-<h2>Same</h2>
 <p>Enjoy this trending attitude CapCut template and create your own stylish video easily.</p>
 </div>
 
-<!-- HOW TO USE -->
 <div class="section">
 <h2>How to Use</h2>
-<p>1. Click the button below</p>
-<p>2. Open in CapCut</p>
+<p>1. Click button</p>
+<p>2. Open CapCut</p>
 <p>3. Export video</p>
 </div>
 
 <a class="btn" href="https://capcut-yt.onelink.me/W3Oy?af_dp=capcut%3A%2F%2Ftemplate%2Fdetail%3Fenter_app%3Dother%26enter_from%3Dshared_other_template_detail_template_btn%26template_id%3D7609967027217861893%26template_language%3DNone&af_xp=social&deep_link_sub1=%7B%22share_token%22%3A%228387316a-2951-4a27-ad2d-7dfaf3a672c8%22%7D&deep_link_value=capcut%253A%252F%252Ftemplate%252Fdetail%253Fenter_app%253Dother%2526enter_from%253Dshared_other_template_detail_template_btn%2526template_id%253D7609967027217861893%2526template_language%253DNone&is_retargeting=true&pid=SharedPage_other_tp_de_new" target="_blank">
-Use template for Capcut
+Use Template For Capcut
 </a>
 
 <div class="share">
@@ -195,22 +144,27 @@ Use template for Capcut
 <div id="relatedList"></div>
 </div>
 
-<!-- BOTTOM BACK -->
-<div class="back-btn" onclick="goBack()">⬅ Go Back</div>
+<div onclick="goHome()" style="margin-top:20px;padding:12px;background:#11161d;border-radius:10px;text-align:center;cursor:pointer">
+⬅ Go Home
+</div>
 
 </div>
 
 <script>
 const username = "kuldeeptech-ai";
 const repo = "kld_editz";
-const currentCategory = "Trending/attitude";
+const currentCategory = "Trending";
 
 function goBack(){
   if(document.referrer){
     history.back();
   }else{
-    window.location.href = "/kld_editz/";
+    goHome();
   }
+}
+
+function goHome(){
+  window.location.href = "https://kuldeeptech-ai.github.io/kld_editz/";
 }
 
 function sharePost(){
@@ -218,7 +172,7 @@ function sharePost(){
     navigator.share({
       title: document.title,
       url: window.location.href
-    });
+    }).catch(()=>copyLink());
   }else{
     copyLink();
     alert("Link copied!");
@@ -226,7 +180,8 @@ function sharePost(){
 }
 
 function copyLink(){
-  navigator.clipboard.writeText(window.location.href);
+  navigator.clipboard.writeText(window.location.href)
+  .catch(()=>prompt("Copy this link:", window.location.href));
 }
 
 async function loadRelated(){
@@ -245,30 +200,27 @@ async function loadRelated(){
       const raw = await fetch(file.download_url);
       const text = await raw.text();
 
-      let catMatch = text.match(/<div class="category">(.*?)<\\/div>/);
-      let postCat = catMatch ? catMatch[1] : "";
+      let cat = (text.match(/<div class="category">(.*?)<\/div>/)||[])[1];
+      if(cat !== currentCategory) continue;
 
-      if(postCat !== currentCategory) continue;
+      let img = (text.match(/class="featured-img".*src="(.*?)"/)||[])[1];
+      if(!img) continue;
 
-      let imgMatch = text.match(/class="featured-img".*src="(.*?)"/);
-      if(!imgMatch) continue;
-
-      let image = imgMatch[1];
       let title = file.name.replace(".html","").replace(/-/g," ");
 
       const div = document.createElement("div");
       div.className="rel-card";
 
-      div.innerHTML=`
+      div.innerHTML = `
         <div class="rel-thumb">
-          <img src="${image}">
+          <img src="${img}">
         </div>
         <div class="rel-title">${title}</div>
       `;
 
-      div.onclick=()=>{
+      div.onclick = ()=>{
         window.location.href = file.path + "?v=" + Date.now();
-      }
+      };
 
       container.appendChild(div);
 
