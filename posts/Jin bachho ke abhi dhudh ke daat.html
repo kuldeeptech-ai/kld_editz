@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jin bachho ke abhi dhudh ke daat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Poppins;
+  background:#0b0f14;
+  color:#fff;
+}
+
+.featured-img,.category{display:none}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 15px;
+}
+
+.container{
+  padding:15px;
+  max-width:900px;
+  margin:auto;
+}
+
+.video-wrap{
+  max-width:400px;
+  margin:20px auto;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+video{
+  width:100%;
+  aspect-ratio:9/16;
+}
+
+.btn{
+  display:block;
+  margin:20px 0;
+  padding:14px;
+  text-align:center;
+  background:#ff0050;
+  border-radius:12px;
+  color:#fff;
+  text-decoration:none;
+}
+
+.share{
+  display:flex;
+  gap:10px;
+}
+
+.share button{
+  flex:1;
+  padding:12px;
+  background:#11161d;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+}
+
+.section{margin-top:15px}
+
+.related{margin-top:30px}
+
+.rel-card{
+  display:flex;
+  gap:10px;
+  background:#11161d;
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+  overflow:hidden;
+}
+
+.rel-thumb{width:120px;height:70px}
+
+.rel-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.rel-title{
+  font-size:13px;
+  padding:8px;
+  display:flex;
+  align-items:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<div onclick="goBack()">⬅ Back</div>
+<div onclick="sharePost()">📤</div>
+</div>
+
+<img class="featured-img" src="https://editztemplate.com/wp-content/uploads/2026/03/f8a57610-918a-4305-b4b3-cd331b10918b-768x432.jpg">
+<div class="category">Trending</div>
+
+<div class="container">
+
+<h1>Jin bachho ke abhi dhudh ke daat</h1>
+
+<div class="video-wrap">
+<video controls autoplay loop>
+<source src="https://v16-capcut.capcutcdn-us.com/028672d58a7c149a205502805f2197ed/69d0d03d/video/tos/useast5/tos-useast5-ve-2795c799-tx/oY8iIXARIIWodWCqZPw1nEeH0uWl0BposQiwBA/?a=3006&bti=cHJ3bzFmc3dmZEBvY15taF4rcm1gYA%3D%3D&&bt=1609&ft=GAAsxInz7ThAzFOPXq8Zmo&mime_type=video_mp4&rc=ZGk5OjczZGczZTg3aTllM0BpM3Z3d2o5cmRzODMzOGVkNEBeNl9iNGAtXjExXy1gXmFgYSMxMC1uMmQ0YWdhLS1kYi1zcw%3D%3D&vvpl=1&l=undefined&btag=e000b0000">
+</video>
+</div>
+
+<div class="section">
+<p>#viral #trending #attitude</p>
+</div>
+
+<div class="section">
+<h2>How to Use</h2>
+<p>1. Click button</p>
+<p>2. Open CapCut</p>
+<p>3. Export video</p>
+</div>
+
+<a class="btn" href="https://capcut-yt.onelink.me/W3Oy?af_dp=capcut%3A%2F%2Ftemplate%2Fdetail%3Fenter_app%3Dother%26enter_from%3Dshared_other_template_detail_template_btn%26template_id%3D7595204901358030088%26template_language%3DNone&af_xp=social&deep_link_sub1=%7B%22share_token%22%3A%224ab8b6cc-371e-4a47-9a9c-f572bbe20603%22%7D&deep_link_value=capcut%253A%252F%252Ftemplate%252Fdetail%253Fenter_app%253Dother%2526enter_from%253Dshared_other_template_detail_template_btn%2526template_id%253D7595204901358030088%2526template_language%253DNone&is_retargeting=true&pid=SharedPage_other_tp_de_new" target="_blank">
+Use Template For Capcut
+</a>
+
+<div class="share">
+<button onclick="sharePost()">Share</button>
+<button onclick="copyLink()">Copy Link</button>
+</div>
+
+<div class="related">
+<h2>🔥 Related Templates</h2>
+<div id="relatedList"></div>
+</div>
+
+<div onclick="goHome()" style="margin-top:20px;padding:12px;background:#11161d;border-radius:10px;text-align:center;cursor:pointer">
+⬅ Go Home
+</div>
+
+</div>
+
+<script>
+const username = "kuldeeptech-ai";
+const repo = "kld_editz";
+const currentCategory = "Trending";
+
+function goBack(){
+  if(document.referrer){
+    history.back();
+  }else{
+    goHome();
+  }
+}
+
+function goHome(){
+  window.location.href = "https://kuldeeptech-ai.github.io/kld_editz/";
+}
+
+function sharePost(){
+  if(navigator.share){
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    }).catch(()=>copyLink());
+  }else{
+    copyLink();
+    alert("Link copied!");
+  }
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href)
+  .catch(()=>prompt("Copy this link:", window.location.href));
+}
+
+async function loadRelated(){
+  const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/posts`);
+  const data = await res.json();
+
+  const container = document.getElementById("relatedList");
+  let count = 0;
+
+  for(const file of data){
+
+    if(!file.name.endsWith(".html")) continue;
+    if(window.location.pathname.includes(file.name)) continue;
+
+    try{
+      const raw = await fetch(file.download_url);
+      const text = await raw.text();
+
+      let cat = (text.match(/<div class="category">(.*?)<\/div>/)||[])[1];
+      if(cat !== currentCategory) continue;
+
+      let img = (text.match(/class="featured-img".*src="(.*?)"/)||[])[1];
+      if(!img) continue;
+
+      let title = file.name.replace(".html","").replace(/-/g," ");
+
+      const div = document.createElement("div");
+      div.className="rel-card";
+
+      div.innerHTML = `
+        <div class="rel-thumb">
+          <img src="${img}">
+        </div>
+        <div class="rel-title">${title}</div>
+      `;
+
+      div.onclick = ()=>{
+        window.location.href = file.path + "?v=" + Date.now();
+      };
+
+      container.appendChild(div);
+
+      count++;
+      if(count >= 4) break;
+
+    }catch{}
+  }
+}
+
+loadRelated();
+</script>
+
+</body>
+</html>
